@@ -25,3 +25,6 @@ else:
     print("Fail. You are not C")
 if 5>= rank_of_cabin:
     print("Invalid cabin class")
+
+
+

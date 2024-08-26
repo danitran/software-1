@@ -13,3 +13,6 @@ if Sex == "Woman":
     elif Value_hemoglobin > 155:print("Fail. You are not good!")
     elif Value_hemoglobin < 117:print("Fail. You are not good!")
 
+
+
+
