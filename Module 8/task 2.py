@@ -11,7 +11,7 @@ connection = mysql.connector.connect(
     database = "flight_game",
     collation = "utf8mb3_general_ci",
     autocommit = True,
-)
+) 
 
 cursor = connection.cursor()
 
