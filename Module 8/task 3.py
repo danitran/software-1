@@ -1,30 +1,49 @@
-import geopy.distance
 
-def calculate_distance(icao_code1, icao_code2):
-  """
-  Calculates the distance between two airports using their coordinates.
-  """
-  conn = psycopg2.connect(  # Replace with your database connection details
-      database="your_database",
-      user="your_username",
-      password="your_password",
-      host="your_host",
-      port="your_port"
-  )
-  cursor = conn.cursor()
-  cursor.execute("SELECT latitude, longitude FROM airport WHERE ident IN (%s, %s)", (icao_code1.upper(), icao_code2.upper()))
-  rows = cursor.fetchall()
-  conn.close()
+print("This program will calculate the geographical distance between "
+      "two airports.")
 
-  if len(rows) != 2:
-      print("One or both airports not found in the database.")
-      return
+#<editor-fold desc="mySQL Connector">
+import mysql.connector
+connection = mysql.connector.connect(
+    # host = '127.0.0.1',
+    user = 'root',
+    password = '1234',
+    database = 'flight_game',
+    collation = 'utf8mb3_general_ci',
+    autocommit = True,
+)
+cursor = connection.cursor()
+#</editor-fold>
 
-  coordinates1 = (rows[0][0], rows[0][1])
-  coordinates2 = (rows[1][0], rows[1][1])
-  distance_in_km = geopy.distance.geodesic(coordinates1, coordinates2).km
-  print(f"The distance between the two airports is approximately {distance_in_km:.2f} kilometers.")
+#<editor-fold desc = "Inputs">
+print("Please enter the two airports.")
+ICAO = ['']*2
+ICAO[0] = input("Enter the first airport: ")
+ICAO[1] = input("Enter the second airport: ")
+#</editor-fold>
 
-icao_code1 = input("Enter the ICAO code of the first airport: ")
-icao_code2 = input("Enter the ICAO code of the second airport: ")
-calculate_distance(icao_code1.upper(), icao_code2.upper())
+#<editor-fold desc = "Specifying queries">
+#Specifying two airports
+AirportQuery = ['']*2
+AirportQuery[0] = f"select name, latitude_deg, longitude_deg from airport where ident = '{ICAO[0]}'"
+AirportQuery[1] = f"select name, latitude_deg, longitude_deg from airport where ident = '{ICAO[1]}'"
+#</editor-fold>
+
+#<editor-fold desc = "Executing queries">
+#airport = [Name, Latitude, Longitude]
+cursor.execute(AirportQuery[0])
+airport_1 = cursor.fetchall()[0]
+
+cursor.execute(AirportQuery[1])
+airport_2 = cursor.fetchall()[0]
+# </editor-fold>
+
+print(f"Your two airports are '{airport_1[0]}' and '{airport_2[0]}'.", end = '\n')
+
+#<editor-fold desc = "Calculating the distance">
+from geopy.distance import geodesic
+
+PortCoord_1 = (airport_1[1], airport_1[2])
+PortCoord_2 = (airport_2[1], airport_2[2])
+print(f"The distance between two airports is: {geodesic(PortCoord_1, PortCoord_2).km :.2f}km")
+#</editor-fold>
