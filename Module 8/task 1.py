@@ -1,26 +1,21 @@
-import psycopg2  # Assuming you have PostgreSQL connection details
 
-def get_airport_info(icao_code):
-  """
-  Fetches airport name and location (town) from the database.
-  """
-  conn = psycopg2.connect(  # Replace with your database connection details
-      database="your_database",
-      user="your_username",
-      password="your_password",
-      host="your_host",
-      port="your_port"
-  )
-  cursor = conn.cursor()
-  cursor.execute("SELECT name, location FROM airport WHERE ident = %s", (icao_code,))
-  row = cursor.fetchone()
-  conn.close()
-  if row:
-      name, location = row
-      print("Airport Name:", name)
-      print("Location:", location)
-  else:
-      print("Airport not found in the database.")
+import mysql.connector
 
-icao_code = input("Enter the ICAO code: ")
-get_airport_info(icao_code.upper())  # Convert ICAO code to uppercase
+print("This program will give you every airport's information based on your"
+      " entered ICAO codes.")
+
+connection = mysql.connector.connect(
+    user = 'root',
+    password = '1234',
+    database = 'flight_game',
+    collation = 'utf8mb3_general_ci',
+    autocommit = True
+)
+cursor = connection.cursor()
+
+ICAO = input("Enter your ICAO code: ")
+#select name, municipality from airport where ident = '{ICAO}';
+query = f"select name, municipality from airport where ident = '{ICAO}'"
+cursor.execute(query)
+answer = cursor.fetchall()
+print(f"The name of the airport is {answer[0][0]} and it is stationed in {answer[0][1]}")
