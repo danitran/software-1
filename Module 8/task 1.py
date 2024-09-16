@@ -1,4 +1,3 @@
-
 import mysql.connector
 
 print("This program will give you every airport's information based on your"
