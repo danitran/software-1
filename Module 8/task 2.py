@@ -1,22 +1,31 @@
-import psycopg2  # Assuming you have PostgreSQL connection details
 
-def list_airports_by_area_code(area_code):
-  """
-  Lists airports located in the specified country ordered by airport type.
-  """
-  conn = psycopg2.connect(  # Replace with your database connection details
-      database="your_database",
-      user="your_username",
-      password="your_password",
-      host="your_host",
-      port="your_port"
-  )
-  cursor = conn.cursor()
-  cursor.execute("SELECT type, COUNT(*) FROM airport WHERE type LIKE %s GROUP BY type ORDER BY type", (area_code + '%',))
-  for row in cursor:
-      airport_type, count = row
-      print(f"{count} {airport_type.lower()} airports")
-  conn.close()
+import mysql.connector
 
-area_code = input("Enter the area code (e.g., FI): ")
-list_airports_by_area_code(area_code.upper())
+print("You need to provide a country code for this program, "
+      "and it will provide you with all airports' info.")
+
+connection = mysql.connector.connect(
+    host = "127.0.0.1",
+    user = "root",
+    password = "1234",
+    database = "flight_game",
+    collation = "utf8mb3_general_ci",
+    autocommit = True,
+)
+
+cursor = connection.cursor()
+
+CountryCode = input("Please enter your country code: ")
+#All Airports and search country through Country Code query
+AirportQuery = f"select name, type from airport where iso_country = '{CountryCode}' and type != 'closed' order by type desc"
+CountryQuery = f"select name from country where iso_country = '{CountryCode}'"
+#
+cursor.execute(AirportQuery)
+AllAirports = cursor.fetchall()
+
+cursor.execute(CountryQuery)
+CountryName = cursor.fetchone()
+
+for i in range(len(AllAirports)) :
+    print(f"{i+1:>3}. {AllAirports[i][0] :>50} : {AllAirports[i][1] : <}")
+print(f"{CountryName[0]} has {len(AllAirports)} airports in total.  \n", end = '')
