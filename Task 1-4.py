@@ -1,0 +1,72 @@
+import random
+
+class Car:
+    def __init__(self, registration_number, max_speed):
+        self.registration_number = registration_number
+        self.max_speed = max_speed
+        self.current_speed = 0
+        self.travelled_distance = 0
+
+    def accelerate(self, change):
+        """Adjusts the current speed of the car based on the change provided."""
+        new_speed = self.current_speed + change
+        if new_speed > self.max_speed:
+            self.current_speed = self.max_speed
+        elif new_speed < 0:
+            self.current_speed = 0
+        else:
+            self.current_speed = new_speed
+
+    def drive(self, hours):
+        """Increases the travelled distance based on the current speed and hours driven."""
+        self.travelled_distance += self.current_speed * hours
+
+def main():
+    # Step 1: Create a new car
+    car = Car("ABC-123", 142)
+    print("Car Properties:")
+    print(f"Registration Number: {car.registration_number}")
+    print(f"Maximum Speed: {car.max_speed} km/h")
+    print(f"Current Speed: {car.current_speed} km/h")
+    print(f"Travelled Distance: {car.travelled_distance} km")
+
+    # Step 2: Accelerate the car
+    car.accelerate(30)
+    car.accelerate(70)
+    car.accelerate(50)
+    print(f"\nCurrent Speed after acceleration: {car.current_speed} km/h")
+
+    # Emergency brake
+    car.accelerate(-200)
+    print(f"Final Speed after emergency brake: {car.current_speed} km/h")
+
+    # Step 3: Drive the car
+    car.drive(1.5)
+    print(f"Travelled Distance after driving for 1.5 hours: {car.travelled_distance} km")
+
+    # Step 4: Start the car race
+    cars = []
+    for i in range(10):
+        max_speed = random.randint(100, 200)
+        registration_number = f"ABC-{i + 1}"
+        cars.append(Car(registration_number, max_speed))
+
+    race_over = False
+    while not race_over:
+        for car in cars:
+            speed_change = random.randint(-10, 15)
+            car.accelerate(speed_change)
+            car.drive(1)  # Drive for 1 hour
+            if car.travelled_distance >= 10000:
+                race_over = True
+                break
+
+    # Print the results
+    print("\nRace Results:")
+    print(f"{'Registration':<12} {'Max Speed':<10} {'Current Speed':<12} {'Distance':<10}")
+    print("-" * 44)
+    for car in cars:
+        print(f"{car.registration_number:<12} {car.max_speed:<10} {car.current_speed:<12} {car.travelled_distance:<10}")
+
+if __name__ == "__main__":
+    main()
