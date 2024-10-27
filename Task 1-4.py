@@ -61,7 +61,7 @@ def main():
                 race_over = True
                 break
 
-    # Print the results
+    #Print the results
     print("\nRace Results:")
     print(f"{'Registration':<12} {'Max Speed':<10} {'Current Speed':<12} {'Distance':<10}")
     print("-" * 44)
